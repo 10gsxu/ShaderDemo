@@ -46,6 +46,7 @@
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 
+                //注意一定要归一化
                 float3 viewDir = normalize(ObjSpaceViewDir(v.vertex));
                 float3 normal = normalize(v.normal);
                 o.rimLight = 1.0 - saturate(dot(normal, viewDir));
