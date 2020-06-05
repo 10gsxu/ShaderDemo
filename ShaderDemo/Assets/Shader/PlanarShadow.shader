@@ -6,6 +6,9 @@
         _ShadowPlane ("ShadowPlane", Vector) = (0, 1, 0, 0.1)
         _ShadowProjDir ("ShadowProjDir", Vector) = (0, 0, 0, 0)
         _ShadowColor("ShadowColor", Color) = (0, 0, 0, 0.5)
+        _WorldPos ("WorldPos", Vector) = (0, 0, 0, 0)
+        _ShadowInvLen ("ShadowInvLen", float) = 0
+        _ShadowFadeParams ("ShadowFadeParams", Vector) = (0, 0, 0, 0)
     }
     SubShader
     {
@@ -14,7 +17,7 @@
 
         Pass
         {
-            Blend SrcAlpha  OneMinusSrcAlpha
+            Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
             Cull Back
             ColorMask RGB
@@ -37,18 +40,21 @@
 
             #include "UnityCG.cginc"
 
-            fixed4 _ShadowPlane;
-            fixed4 _ShadowProjDir;
-            fixed4 _ShadowColor;
+            float4 _ShadowPlane;
+            float4 _ShadowProjDir;
+            float4 _ShadowColor;
+            float4 _WorldPos;
+            float _ShadowInvLen;
+            float4 _ShadowFadeParams;
 
             struct appdata
             {
-                fixed4 vertex : POSITION;
+                float4 vertex : POSITION;
             };
 
             struct v2f
             {
-                fixed4 vertex : SV_POSITION;
+                float4 vertex : SV_POSITION;
                 float3 worldPos : TEXCOORD0;
                 float3 shadowPos : TEXCOORD1;
             };
@@ -65,13 +71,17 @@
                 worldpos = worldpos + distance * lightdir.xyz;
     
                 o.vertex = mul(UNITY_MATRIX_VP, float4(worldpos, 1.0));
+                
+                o.worldPos = _WorldPos;
+                o.shadowPos = worldpos;
                 return o;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
-                fixed4 color = _ShadowColor;
-                //color.a = (pow((1.0 - clamp(((sqrt(dot(posToPlane_2, posToPlane_2)) * _ShadowInvLen) - _ShadowFadeParams.x), 0.0, 1.0)), _ShadowFadeParams.y) * _ShadowFadeParams.z);
+                float3 direction = i.worldPos - i.shadowPos;
+                float4 color = _ShadowColor;
+                color.a = (pow((1.0 - clamp(((sqrt(dot(direction, direction)) * _ShadowInvLen) - _ShadowFadeParams.x), 0.0, 1.0)), _ShadowFadeParams.y) * _ShadowFadeParams.z);
                 return color;
             }
             ENDCG
