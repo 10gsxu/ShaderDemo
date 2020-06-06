@@ -6,7 +6,6 @@
         _ShadowPlane ("ShadowPlane", Vector) = (0, 1, 0, 0.1)
         _ShadowProjDir ("ShadowProjDir", Vector) = (0, 0, 0, 0)
         _ShadowColor("ShadowColor", Color) = (0, 0, 0, 0.5)
-        _WorldPos ("WorldPos", Vector) = (0, 0, 0, 0)
         _ShadowInvLen ("ShadowInvLen", float) = 0
         _ShadowFadeParams ("ShadowFadeParams", Vector) = (0, 0, 0, 0)
     }
@@ -43,7 +42,6 @@
             float4 _ShadowPlane;
             float4 _ShadowProjDir;
             float4 _ShadowColor;
-            float4 _WorldPos;
             float _ShadowInvLen;
             float4 _ShadowFadeParams;
 
@@ -72,7 +70,8 @@
     
                 o.vertex = mul(UNITY_MATRIX_VP, float4(worldpos, 1.0));
                 
-                o.worldPos = _WorldPos;
+                //unity_ObjectToWorld的w行向量即为物体的世界位置
+                o.worldPos = float3(unity_ObjectToWorld[0].w, _ShadowPlane.w, unity_ObjectToWorld[2].w);
                 o.shadowPos = worldpos;
                 return o;
             }
