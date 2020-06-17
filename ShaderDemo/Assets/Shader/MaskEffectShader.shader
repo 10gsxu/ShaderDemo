@@ -55,8 +55,9 @@
 
             fixed4 frag (v2f i) : SV_Target
             {
+                fixed2 scale = fixed2(_ScreenParams.x / _ScreenParams.y, 1);
                 fixed4 col = tex2D(_MainTex, i.uv);
-                fixed3 mask = createCircle(float2(0.5, 0.5), 0.2, i.uv);
+                fixed3 mask = createCircle(float2(0.5, 0.5)*scale, 0.2, i.uv*scale);
                 return col * fixed4(mask, 1.0);
             }
             ENDCG
