@@ -20,7 +20,7 @@ float4 _MainTex_ST;
 
 sampler2D _CameraDepthTexture;
 
-fixed4 _MainColor;
+fixed4 _RimColor;
 float _RimPower;
 float _IntersectPower;
 
@@ -42,15 +42,18 @@ v2f vert (appdata v)
 
 fixed4 frag (v2f i) : SV_Target
 {
+    //获取已有的深度信息,此时的深度图里没有力场的信息
+    //判断相交
     float depth = SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenPos));
     float sceneZ = LinearEyeDepth(depth);
     float partZ = i.screenPos.z;
     float diff = sceneZ - partZ;
     float intersect = pow(1 - diff, _IntersectPower);
     
+    //圆环
     float rim = pow(i.rimLight, _RimPower);
     float glow = max(intersect, rim);
     
-    fixed3 rimColor = _MainColor.rgb * glow;
+    fixed3 rimColor = _RimColor.rgb * glow;
     return fixed4(rimColor, 1);
 }
