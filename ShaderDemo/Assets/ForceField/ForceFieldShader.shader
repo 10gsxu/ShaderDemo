@@ -11,14 +11,9 @@
     SubShader
     {
         ZWrite Off
-        Blend SrcAlpha OneMinusSrcAlpha
+        Blend SrcAlpha One
         Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
         LOD 100
-        //获取屏幕图像
-        GrabPass
-        {
-            "_GrabTempTex"
-        }
         //如果只使用一个Pass渲染，背面的相交效果会看不见
         Pass
         {
