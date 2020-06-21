@@ -22,7 +22,6 @@ sampler2D _CameraDepthTexture;
 
 fixed4 _MainColor;
 float _RimPower;
-float _RimStrength;
 float _IntersectPower;
 
 v2f vert (appdata v)
@@ -37,7 +36,7 @@ v2f vert (appdata v)
     float3 worldNormal = UnityObjectToWorldNormal(v.normal);
     float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
     float3 worldView = normalize(UnityWorldSpaceViewDir(worldPos));
-    o.rimLight = 1 - abs(dot(worldNormal, worldView)) * _RimStrength;
+    o.rimLight = 1 - abs(dot(worldNormal, worldView));
     return o;
 }
 

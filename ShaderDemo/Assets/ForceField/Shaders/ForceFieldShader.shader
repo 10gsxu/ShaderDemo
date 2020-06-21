@@ -5,7 +5,6 @@
         _MainTex ("Texture", 2D) = "white" {}
         _MainColor ("Main Color", COLOR) = (1,1,1,1)
         _RimPower ("Rim Power", Range(0, 10)) = 1
-        _RimStrength ("Rim Strength", Range(0, 10)) = 1
         _IntersectPower ("Intersect Power", Range(0, 10)) = 1
     }
     SubShader
