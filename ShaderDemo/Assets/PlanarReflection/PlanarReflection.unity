@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29daaa44e97b542cf83eda4f011df0e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blurMaterial: {fileID: 0}
+  blurMaterial: {fileID: 2100000, guid: 65b72a05250b54ddf995eda735e1e142, type: 2}
   downSample: 0
 --- !u!1 &164690829
 GameObject:
