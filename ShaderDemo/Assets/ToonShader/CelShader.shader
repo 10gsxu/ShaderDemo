@@ -51,7 +51,7 @@
 
             fixed4 frag (v2f i) : SV_Target
             {
-                half halfLambert = i.ndl * 0.5 + 0.5;
+                half halfLambert = i.ndl * 0.5 + 0.5;//i.ndl范围[-1，1]，转为[0, 1]
                 half floorToon = floor(halfLambert * _StairNum) * (1/_StairNum);
                 fixed4 col = tex2D(_MainTex, i.uv);
                 col.rgb *= floorToon;
