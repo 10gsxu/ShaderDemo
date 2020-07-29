@@ -15,6 +15,11 @@ public class RebuildWorldSpace1 : MonoBehaviour
     public float fogStart;
     public float fogEnd;
 
+    private void Start()
+    {
+        camera.depthTextureMode |= DepthTextureMode.Depth;
+    }
+
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         if (effectMaterial == null)
