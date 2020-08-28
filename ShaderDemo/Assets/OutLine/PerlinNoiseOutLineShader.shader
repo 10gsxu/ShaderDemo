@@ -6,6 +6,9 @@
         _MainTex ("Texture", 2D) = "white" {}
         _Outline("Outline",float) = 0.1
         _OutlineColor("OutlineColor",Color) = (0,0,0,1)
+
+        _NoiseTillOffset ("NoiseTillOffset", Vector) = (1,1,0,0)
+        _NoiseAmp("NoiseAmp", float) = 1
     }
     SubShader
     {
@@ -58,6 +61,7 @@
             struct appdata
             {
                 float4 vertex : POSITION;
+                float2 uv :TEXCOORD0;
                 float3 normal : NORMAL;
             };
             struct v2f
@@ -65,7 +69,10 @@
                 float4 vertex : SV_POSITION;
             };
             float _Outline;
-            float4 _OutlineColor;           
+            float4 _OutlineColor;  
+
+            half4 _NoiseTillOffset;
+            half _NoiseAmp;        
 
             float2 hash22(float2 p)
             {
@@ -97,7 +104,16 @@
                 //把法线转换到投影空间
                 float2 pnormal_xy = mul((float2x2)UNITY_MATRIX_P,vnormal.xy);
                 //朝法线方向外扩
-                o.vertex.xy = o.vertex.xy + pnormal_xy * o.vertex.w * _Outline;//* o.vertex.w描边不会随着Z轴的变化而变化
+                //o.vertex.xy = o.vertex.xy + pnormal_xy * o.vertex.w * _Outline;//* o.vertex.w描边不会随着Z轴的变化而变化
+
+                float2 noise_uv = v.uv;
+                noise_uv = noise_uv * _NoiseTillOffset.xy + _NoiseTillOffset.zw;
+                float nosieWidth = perlin_noise(noise_uv);
+                nosieWidth = nosieWidth * 2 - 1;    // ndc Space (-1, 1)
+
+                half outlineWidth = _Outline + _Outline * nosieWidth * _NoiseAmp;
+                o.vertex.xy = o.vertex.xy + pnormal_xy * o.vertex.w * outlineWidth;//* o.vertex.w描边不会随着Z轴的变化而变化
+
                 return o;
             }
 
